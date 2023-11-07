@@ -1,0 +1,22 @@
+.discipline_wrap{
+  margin: 0 auto;
+  max-width: 1380px;
+
+  button{
+    margin-bottom: 40px;
+  }
+
+
+  .discipline{
+    grid-template-columns: repeat(4, 1fr);
+    display: grid;
+    grid-gap: 10px;
+
+    //width: 100px;
+    //height: 100px;
+    //background-color: aqua;
+    //display: flex;
+    //justify-content: space-around;
+    //align-items: center;
+  }
+}
