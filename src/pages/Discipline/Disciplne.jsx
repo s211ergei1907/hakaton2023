@@ -5,6 +5,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "../../axios";
 import { Link } from "react-router-dom";
 export const Disciplne = () => {
+  //Перехватывание параметра одной статьи
+  const [data, setData] = useState();
+
   const navigate = useNavigate();
 
   const fetchDiscipline = async () => {
@@ -25,12 +28,13 @@ export const Disciplne = () => {
           onClick={() => navigate(`/new_discipline/${discipline.id}`)}
           type="submit"
         >
-          Добавить новую дисциплину
+          Создать новую дисциплину
         </button>
 
         <div className={styles.discipline}>
           {discipline.map(({ name, id }, index) => (
             <Card
+              fetchDiscipline={fetchDiscipline}
               key={index}
               name={name}
               id={id}

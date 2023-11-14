@@ -21,7 +21,9 @@ export const Header = () => {
             <Link to="/test">
               <li>тесты</li>
             </Link>
-            <li>Создание тестов</li>
+            <Link to="/groups">
+              <li>Группы</li>
+            </Link>
             <li>О нас</li>
           </ul>
           <div className={styles.header__link}>
