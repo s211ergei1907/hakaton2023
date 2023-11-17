@@ -5,18 +5,11 @@ import axios from "../../axios";
 import { logDOM } from "@testing-library/react";
 import { Tests } from "../../pages/Test/Tests";
 import redact from "../../assets/img/redact.png";
+import { Update } from "../Update/Update";
 
 export const Card = ({ name, id, discipline, setDiscipline }) => {
   const navigate = useNavigate();
 
-  const disciplineUpdate = async (id, event) => {
-    try {
-      const res = await axios.patch(`disciplines/${id}`, { id: 1 });
-      console.log(res);
-    } catch (e) {
-      console.log(e);
-    }
-  };
   const disciplineDelete = (id) => {
     try {
       axios
@@ -41,7 +34,7 @@ export const Card = ({ name, id, discipline, setDiscipline }) => {
         <div
           onClick={(event) => {
             event.stopPropagation();
-            disciplineUpdate(id, event);
+            navigate(`/update/${name}/${id}`);
           }}
           className={styles.redact_wrap}
         >
@@ -56,14 +49,7 @@ export const Card = ({ name, id, discipline, setDiscipline }) => {
           className={styles.closeModal}
         ></div>
 
-        <p
-          onClick={(event) => {
-            event.stopPropagation();
-            disciplineUpdate(id, event);
-          }}
-        >
-          {name}
-        </p>
+        <p>{name}</p>
       </div>
     </div>
   );

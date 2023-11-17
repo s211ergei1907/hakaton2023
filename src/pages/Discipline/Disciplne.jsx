@@ -3,10 +3,11 @@ import styles from "./Discipline.module.scss";
 import { Card } from "../../components/Card/Card";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "../../axios";
+
 import { Link } from "react-router-dom";
+import { Update } from "../../components/Update/Update";
 export const Disciplne = () => {
-  //Перехватывание параметра одной статьи
-  const [data, setData] = useState();
+  const [discipline, setDiscipline] = useState([{}]);
 
   const navigate = useNavigate();
 
@@ -14,8 +15,6 @@ export const Disciplne = () => {
     const { data } = await axios.get("disciplines");
     setDiscipline(data);
   };
-
-  const [discipline, setDiscipline] = useState([]);
 
   useEffect(() => {
     fetchDiscipline();

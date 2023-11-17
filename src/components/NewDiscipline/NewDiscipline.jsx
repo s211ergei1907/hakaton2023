@@ -22,17 +22,6 @@ function NewDiscipline() {
       .catch((err) => console.log(err));
   };
 
-  // const id = useParams();
-  // console.log(id);
-  // const postDiscipline = async () => {
-  //   const { data } = await axios.post(`disciplines/${id}`);
-  //   setCards(data);
-  //   console.log(id);
-  // };
-  // useEffect(() => {
-  //   postDiscipline();
-  // }, []);
-
   return (
     <div className={styles.newDiscipline__wrap}>
       <div className={styles.newDiscipline}>
