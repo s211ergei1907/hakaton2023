@@ -1,155 +1,219 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import styles from "./NewTest.module.scss";
-import { axiosInstance } from "../../../axios";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import styles from './NewTest.module.scss';
+import { axiosInstance } from '../../../axios';
 
-import axios from "axios";
+import axios from 'axios';
 
-function NewTest({ children }) {
-  const [store, setStore] = useState();
+//TODO удаление вопросов
+function NewTest() {
+  const { disciplineName } = useParams();
+
+  const [question, setQuestion] = useState('');
+  const [testName, setTestName] = useState('');
+  const [answers, setAnswers] = useState([]);
+  const [currentQuestionNumber, setCurrentQuestionNumber] = useState(0);
+
+  const [finalTest, setFinalTest] = useState({ test: { testName: '', disciplineName } });
+
   const fetchDiscipline = async () => {
-    const { data } = await axios.get(
-      "https://653d2abef52310ee6a99f273.mockapi.io/disciplines",
-    );
-    setStore({ ...data });
-    console.log("store: ", store);
+    const {
+      data: [data]
+    } = await axios.get('https://653d2abef52310ee6a99f273.mockapi.io/disciplines');
+
+    if (data) {
+      setFinalTest(data);
+      setTestName(data.test.testName);
+      setQuestion(data.questions[0].questionText);
+      setAnswers(data.answers.filter(({ questionId }) => questionId === data.questions[0]?.id));
+    }
   };
 
   useEffect(() => {
     fetchDiscipline();
   }, []);
 
-  const { disciplineName } = useParams();
+  //Создать целый вопрос с ответами, записать это в JSON, после чего очистить поля для возможности создания ещё вопроса
+  const onClickCreateQuestion = () => {
+    const id = isEditMode ? answers[0].questionId : String(Math.random()).slice(2);
 
-  //Создать целый вопрос c ответами, записать это в JSON, после чего очистить поля для возможности создания ещё вопроса
-  const onClickCreateQuestionWithAnswers = () => {
-    console.log("store", store);
-    console.log("isAnswers", isAnswers);
+    const data = {
+      test: { testName, disciplineName },
+      question: { questionText: question, id },
+      answers: answers.map(el => ({ ...el, questionId: id }))
+    };
+
+    if (isEditMode) {
+      setFinalTest(prev => ({
+        test: { ...prev.test, testName },
+        questions: [...(prev.questions ?? []).map(el => (el.id === id ? { ...data.question } : el))],
+        answers: [
+          ...(prev.answers ?? []).map(el =>
+            el.questionId === id ? { ...data.answers.find(({ id }) => id === el.id) } : el
+          )
+        ]
+      }));
+    } else {
+      setFinalTest(prev => ({
+        test: { ...prev.test, testName },
+        questions: [...(prev.questions ?? []), { ...data.question }],
+        answers: [...(prev.answers ?? []), ...data.answers]
+      }));
+
+      setCurrentQuestionNumber(prev => prev + 1);
+      setQuestion('');
+      setAnswers([]);
+    }
   };
 
-  //Ответы
-  const [isAnswers, setIsAnswers] = useState([]);
-
   const handleChangeCheckboxAnswers = (id, correct) => {
-    setIsAnswers((prevData) =>
-      prevData.map((item) => (item.id === id ? { ...item, correct } : item)),
-    );
+    setAnswers(prevData => prevData.map(item => (item.id === id ? { ...item, correct } : item)));
   };
 
   const handleChangeInputAnswers = (id, answer) => {
-    setIsAnswers((prevData) =>
-      prevData.map((item) => (item.id === id ? { ...item, answer } : item)),
-    );
+    setAnswers(prevData => prevData.map(item => (item.id === id ? { ...item, answer } : item)));
   };
 
-  // сам Вопрос
-  const [isQuestion, setIsQuestion] = useState("");
-
-  const handleQuestionChange = (e) => {
-    setIsQuestion(e.target.value);
-    store.questions = isQuestion;
+  const handleQuestionChange = e => {
+    setQuestion(e.target.value);
   };
 
-  const handleAddQue = () => {
+  const onAddQuestion = () => {
     const store = {
-      id: Date.now(),
+      id: Date.now()
     };
 
-    setIsAnswers([...isAnswers, store]);
+    setAnswers(prev => [...prev, store]);
   };
 
-  const handleRemoveQue = (id) => {
-    const updatedItems = isAnswers.filter((item) => item.id !== id);
-    setIsAnswers(updatedItems);
+  const handleRemoveQue = id => {
+    setAnswers(answers.filter(item => item.id !== id));
   };
 
-  const [testName, setTestName] = useState("");
-  const [isDisabledInput, setDisabledInput] = useState(false);
-
-  const handleInputNameTest = (event) => {
-    setTestName(event.target.value);
-  };
-  const handleFocus = () => {
-    setDisabledInput(true);
-  };
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault();
   };
-  const handleOnBlurInputTestName = (event) => {
-    setDisabledInput(false);
-    // store.test.disciplineName = disciplineName;
-    // store.test.testName = testName;
-    console.log(store);
+
+  const onCurrentQuestionChange = newCurrentQuestionNumber => {
+    const question = finalTest.questions?.[newCurrentQuestionNumber];
+    setCurrentQuestionNumber(newCurrentQuestionNumber);
+
+    if (!question) {
+      setQuestion('');
+      setAnswers([]);
+
+      return;
+    }
+
+    const answers = finalTest.answers.filter(({ questionId }) => questionId === question.id);
+
+    setQuestion(question.questionText);
+    setAnswers(answers);
   };
 
+  const onSaveTest = async () => {
+    //TODO вставить URL
+    await axiosInstance.post('', finalTest);
+  };
+
+  const isCorrectAnswerSelected = Boolean(answers.find(({ correct, answer }) => correct && answer));
+  const canCreateAnswer = Boolean(testName && question && isCorrectAnswerSelected);
+
+  const isEditMode = finalTest.questions && currentQuestionNumber !== finalTest.questions.length;
+
   return (
-    <>
-      <div className={styles.newTest__wrap}>
-        <div className={styles.newTest}>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="title"
-              placeholder={`Название дисциплины: ${disciplineName}`}
-              disabled={true}
-            />
-            <input
-              type="text"
-              placeholder={"Введите название теста"}
-              onChange={handleInputNameTest}
-              name="name"
-              value={testName}
-              onFocus={handleFocus}
-              onBlur={handleOnBlurInputTestName}
-              autoFocus={isDisabledInput}
-            />
-            <button type="button" onClick={onClickCreateQuestionWithAnswers}>
-              Создать вопрос
-            </button>
+    <div className={styles.newTest__wrap}>
+      <div className={styles.newTest}>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="title"
+            placeholder={`Название дисциплины: ${disciplineName}`}
+            disabled={true}
+          />
 
-            <div className={styles.que__wrapper}>
-              <input
-                placeholder={"Введите вопрос"}
-                type="text"
-                className={styles.question__title}
-                onChange={handleQuestionChange}
-              ></input>
-              <div className={styles.checkbox__wrapper}>
-                {isAnswers.map((que) => (
-                  <label key={que.id}>
-                    <input
-                      value="option2"
-                      type="checkbox"
-                      name="true"
-                      className={styles.real_check}
-                      checked={que.correct}
-                      onChange={(e) =>
-                        handleChangeCheckboxAnswers(que.id, e.target.checked)
-                      }
-                    />
-                    <span className={styles.fake_check}></span>
-                    <input
-                      type="text"
-                      value={que.answer}
-                      onChange={(e) =>
-                        handleChangeInputAnswers(que.id, e.target.value)
-                      }
-                    />
-                    <button onClick={() => handleRemoveQue(que.id)}>
-                      Удалить
-                    </button>
-                  </label>
-                ))}
+          <input
+            type="text"
+            placeholder={'Введите название теста'}
+            onChange={event => setTestName(event.target.value)}
+            name="name"
+            value={testName}
+          />
 
-                <button onClick={handleAddQue} className={styles.create_que}>
-                  Добавить вопрос
-                </button>
-              </div>
+          <div className={styles.que__wrapper}>
+            <input
+              value={question}
+              placeholder="Введите вопрос"
+              type="text"
+              className={styles.question__title}
+              onChange={handleQuestionChange}
+            ></input>
+            <div className={styles.checkbox__wrapper}>
+              {answers.map(que => (
+                <label key={que.id}>
+                  <input
+                    value="option2"
+                    type="checkbox"
+                    name="true"
+                    className={styles.real_check}
+                    checked={que.correct}
+                    onChange={e => handleChangeCheckboxAnswers(que.id, e.target.checked)}
+                  />
+                  <span className={styles.fake_check}></span>
+                  <input
+                    type="text"
+                    value={que.answer}
+                    onChange={e => handleChangeInputAnswers(que.id, e.target.value)}
+                  />
+                  <button onClick={() => handleRemoveQue(que.id)}>Удалить</button>
+                </label>
+              ))}
+
+              <button onClick={onAddQuestion} className={styles.create_que} disabled={!question}>
+                Добавить ответ
+              </button>
+
+              <button
+                type="button"
+                onClick={onClickCreateQuestion}
+                disabled={!canCreateAnswer}
+                style={{ marginTop: 20 }}
+              >
+                {!isEditMode ? <>Создать вопрос</> : <>Обновить вопрос</>}
+              </button>
+
+              {Boolean(currentQuestionNumber) && (
+                <button onClick={() => onCurrentQuestionChange(currentQuestionNumber - 1)}>{'<'}</button>
+              )}
+              {Boolean(finalTest.questions && currentQuestionNumber < finalTest.questions?.length) && (
+                <button onClick={() => onCurrentQuestionChange(currentQuestionNumber + 1)}>{'>'}</button>
+              )}
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
-    </>
+      <div>
+        <h1>Список вопросов</h1>
+        {finalTest.questions?.map(({ questionText, id }) => (
+          <div key={id}>
+            <h2>{questionText}</h2>
+            <ol>
+              {finalTest.answers
+                .filter(({ questionId }) => questionId === id)
+                .map(({ answer, correct, id }) => (
+                  <li style={{ color: correct ? 'green' : 'gray' }} key={id}>
+                    {answer}
+                  </li>
+                ))}
+            </ol>
+          </div>
+        ))}
+      </div>
+
+      <button onClick={onSaveTest} disabled={!finalTest.questions?.length || finalTest.questions?.length < 1}>
+        Сохранить
+      </button>
+    </div>
   );
 }
 
