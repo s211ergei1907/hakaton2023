@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./NewDiscipline.module.scss";
-import axios from "../../axios";
+import { axiosInstance } from "../../axios";
 import { Link } from "react-router-dom";
 import { logDOM } from "@testing-library/react";
 
@@ -16,7 +16,7 @@ function NewDiscipline() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    axios
+    axiosInstance
       .post("disciplines", { ...discipline })
       .then((response) => navigate("/discipline"))
       .catch((err) => console.log(err));

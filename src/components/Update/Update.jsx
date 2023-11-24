@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
 import styles from "../NewDiscipline/NewDiscipline.module.scss";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "../../axios";
+import { axiosInstance } from "../../axios";
 export function Update() {
-  const { name, id } = useParams();
-  const [state, setState] = useState({ name: "" });
+  const { name, id, title_name } = useParams();
+  const [state, setState] = useState({ name: `${name}` });
 
   const navigate = useNavigate();
 
@@ -20,9 +20,9 @@ export function Update() {
     e.preventDefault();
 
     try {
-      const response = await axios
-        .patch(`disciplines/${id}`, state)
-        .then((response) => navigate("/discipline"));
+      const response = await axiosInstance
+        .patch(`${title_name}/${id}`, state)
+        .then((response) => navigate(`/${title_name}`));
     } catch (error) {
       console.error("Error patching resource:", error.message);
     }

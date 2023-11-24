@@ -1,12 +1,60 @@
+body{
+}
+
+button {
+  padding: 10px 15px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  &:active {
+    background-color: #004080;
+  }
+
+  &:disabled {
+    background-color: #bdbdbd;
+  }
+
+  /* Отключаем стандартные стили для кнопки */
+  &:focus {
+    outline: none;
+  }
+}
+
+input{
+  padding: 8px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+}
+
 
 .container{
   margin: 0 auto;
   max-width: 1380px;
 
 }
-
+a{
+  text-decoration: none;
+  background-color: transparent;
+}
+::placeholder {
+  color: #999; /* Цвет текста placeholder */
+  font-style: italic; /* Курсив для placeholder, если нужно */
+}
 html, body, div, span, h1, h2, h3, h4, h5, h6, p, a, img, ul, li
 {
+  font-family: 'Roboto', sans-serif;
+
     margin: 0;
     padding: 0;
     border: 0;

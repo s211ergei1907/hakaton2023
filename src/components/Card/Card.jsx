@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Card.module.scss";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "../../axios";
+import { axiosInstance } from "../../axios";
 import { logDOM } from "@testing-library/react";
 import { Tests } from "../../pages/Test/Tests";
 import redact from "../../assets/img/redact.png";
@@ -9,10 +9,10 @@ import { Update } from "../Update/Update";
 
 export const Card = ({ name, id, discipline, setDiscipline }) => {
   const navigate = useNavigate();
-
+  const title_name = "disciplines";
   const disciplineDelete = (id) => {
     try {
-      axios
+      axiosInstance
         .delete(`disciplines/${id}`)
         .then(
           setDiscipline((prev) =>
@@ -34,7 +34,7 @@ export const Card = ({ name, id, discipline, setDiscipline }) => {
         <div
           onClick={(event) => {
             event.stopPropagation();
-            navigate(`/update/${name}/${id}`);
+            navigate(`/update/${title_name}/${name}/${id}`);
           }}
           className={styles.redact_wrap}
         >
