@@ -4,6 +4,7 @@ import { Outlet, Link } from "react-router-dom";
 import tg from "../../assets/img/tg.svg";
 import vk from "../../assets/img/vk.svg";
 import logo from "../../assets/img/logoSDK.svg";
+import SignIn from "../../pages/SignIn/SignIn";
 
 export const Header = () => {
   return (
@@ -15,20 +16,22 @@ export const Header = () => {
             <img src={logo} alt="sdk" />
           </div>
           <ul>
-            <Link to="/discipline">
+            <Link to="/disciplines">
               <li>Дисциплины</li>
             </Link>
             <Link to="/test">
-              <li>тесты</li>
+              <li>Результаты</li>
             </Link>
             <Link to="/groups">
               <li>Группы</li>
             </Link>
-            <li>О нас</li>
+            <li>Создание преподавателей</li>
+            <li>Создание админа</li>
           </ul>
           <div className={styles.header__link}>
-            <img style={{ marginRight: "13px" }} src={tg} alt="tg" />
-            <img src={vk} alt="" />
+            <Link to="/auth">
+              <h5>Вход</h5>
+            </Link>
           </div>
         </div>
       </div>

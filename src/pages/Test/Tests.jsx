@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { findAllByDisplayValue, logDOM } from "@testing-library/react";
 import styles from "./Tests.module.scss";
-import axios from "../../axios";
-import { useParams } from "react-router-dom";
+import { axiosInstance } from "../../axios";
+import { useNavigate, useParams } from "react-router-dom";
 import redact from "../../assets/img/redact.png";
 
 export const Tests = () => {
   const [tests, setTests] = useState([]);
   const { disciplineName } = useParams();
-
+  const navigate = useNavigate();
   const fetchTests = async () => {
-    const { data } = await axios.get(`tests/${disciplineName}`);
+    const { data } = await axiosInstance.get(`tests/${disciplineName}`);
     setTests(data);
   };
 
@@ -20,13 +20,17 @@ export const Tests = () => {
 
   return (
     <div className={styles.tests__wrap}>
-      <button type="submit" style={{ marginBottom: "30px" }}>
+      <button
+        onClick={() => navigate(`/new_test/${disciplineName}`)}
+        type="submit"
+        style={{ marginBottom: "30px" }}
+      >
         Создать тест
       </button>
       <div className={styles.tests}>
         <div className={styles.card_wrap}>
           {tests.map(({ testName, id }, index) => (
-            <>
+            <div key={index}>
               <div
                 // onClick={() => {
                 //     navigate(`/discipline/${id}`);
@@ -48,7 +52,7 @@ export const Tests = () => {
 
                 <p>{testName}</p>
               </div>
-            </>
+            </div>
           ))}
         </div>
       </div>

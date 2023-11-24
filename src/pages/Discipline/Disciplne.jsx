@@ -2,17 +2,15 @@ import React, { useEffect, useState } from "react";
 import styles from "./Discipline.module.scss";
 import { Card } from "../../components/Card/Card";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "../../axios";
+import { axiosInstance } from "../../axios";
 
-import { Link } from "react-router-dom";
-import { Update } from "../../components/Update/Update";
 export const Disciplne = () => {
   const [discipline, setDiscipline] = useState([{}]);
 
   const navigate = useNavigate();
 
   const fetchDiscipline = async () => {
-    const { data } = await axios.get("disciplines");
+    const { data } = await axiosInstance.get("disciplines");
     setDiscipline(data);
   };
 
