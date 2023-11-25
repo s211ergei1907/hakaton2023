@@ -25,6 +25,8 @@ function NewTest({ testUrl }) {
       setTestName(data.test.testName);
       setQuestion(data.questions[0].questionText);
       setAnswers(data.answers.filter(({ questionId }) => questionId === data.questions[0]?.id));
+    } else {
+      setFinalTest(prev => ({ ...prev, test: { ...prev.test, id: String(Math.random()).slice(2) } }));
     }
   };
 
