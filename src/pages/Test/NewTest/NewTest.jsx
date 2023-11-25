@@ -3,10 +3,8 @@ import { useParams } from 'react-router-dom';
 import styles from './NewTest.module.scss';
 import { axiosInstance } from '../../../axios';
 
-import axios from 'axios';
-
 //TODO удаление вопросов
-function NewTest() {
+function NewTest({ testUrl }) {
   const { disciplineName } = useParams();
 
   const [question, setQuestion] = useState('');
@@ -17,9 +15,10 @@ function NewTest() {
   const [finalTest, setFinalTest] = useState({ test: { testName: '', disciplineName } });
 
   const fetchDiscipline = async () => {
-    const {
-      data: [data]
-    } = await axios.get('https://653d2abef52310ee6a99f273.mockapi.io/disciplines');
+    // let resp = await axiosInstance.get('https://653d2abef52310ee6a99f273.mockapi.io/disciplines1');
+    let resp = testUrl && (await axiosInstance.get(testUrl));
+
+    let data = resp?.data?.[0];
 
     if (data) {
       setFinalTest(data);
