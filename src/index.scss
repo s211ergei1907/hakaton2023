@@ -20,6 +20,10 @@ button {
     background-color: #004080;
   }
 
+  &:disabled {
+    background-color: #bdbdbd;
+  }
+
   /* Отключаем стандартные стили для кнопки */
   &:focus {
     outline: none;

@@ -1,6 +1,6 @@
 import { Header } from "./components/Header/Header";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Discipline } from "./pages/Discipline/Discipline";
+import { Disciplne } from "./pages/Discipline/Disciplne";
 import { Tests } from "./pages/Test/Tests";
 import { Group } from "./pages/Group/Group";
 import NewDiscipline from "./components/NewDiscipline/NewDiscipline";
@@ -23,7 +23,7 @@ function App() {
             <Route path="/" element={<Header />}>
               <Route path="registration" element={<SignUp />}></Route>
               <Route path="auth" element={<SignIn />}></Route>
-              <Route path="disciplines/" element={<Discipline />} />
+              <Route path="disciplines/" element={<Disciplne />} />
               <Route path="new_discipline/:id" element={<NewDiscipline />} />
               <Route path="new_group" element={<NewGroup />} />
 
