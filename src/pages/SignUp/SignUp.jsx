@@ -1,28 +1,28 @@
-import React, { useState } from "react";
-import { axiosInstance } from "../../axios";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { axiosInstance } from '../../axios';
+import { useNavigate } from 'react-router-dom';
 
 const Registration = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
 
   const handleRegistration = async () => {
-    if (username !== "" && password !== "" && email !== "") {
+    if (username !== '' && password !== '' && email !== '') {
       try {
-        const response = await axiosInstance.post("/registration", {
+        const response = await axiosInstance.post('/register', {
           username,
           password,
-          email,
+          email
         });
-        console.log("Успешная регистрация", response.data);
-        navigate("/auth");
+        console.log('Успешная регистрация', response.data);
+        navigate('/auth');
       } catch (error) {
-        console.error("Ошибка регистрации", error.response.data);
+        console.error('Ошибка регистрации', error.response.data);
       }
     } else {
-      alert("Введите все поля");
+      alert('Введите все поля');
     }
   };
 
@@ -33,33 +33,33 @@ const Registration = () => {
       <form>
         <label>
           <input
-            style={{ width: "500px" }}
+            style={{ width: '500px' }}
             placeholder="Имя пользователя:"
             type="text"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={e => setUsername(e.target.value)}
           />
         </label>
         <br />
         <br />
         <label>
           <input
-            style={{ width: "500px" }}
+            style={{ width: '500px' }}
             placeholder="Пароль"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
           />
         </label>
         <br />
         <br />
         <label>
           <input
-            style={{ width: "500px" }}
+            style={{ width: '500px' }}
             placeholder="Email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
           />
         </label>
         <br />
