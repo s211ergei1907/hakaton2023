@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from './NewTest.module.scss';
 import { axiosInstance } from '../../../axios';
+import img from '../../../assets/icons/delete.svg';
 
-//TODO удаление вопросов
 function NewTest({ testUrl }) {
   const { disciplineName } = useParams();
 
@@ -15,7 +15,7 @@ function NewTest({ testUrl }) {
   const [finalTest, setFinalTest] = useState({ test: { testName: '', disciplineName } });
 
   const fetchDiscipline = async () => {
-    // let resp = await axiosInstance.get('https://653d2abef52310ee6a99f273.mockapi.io/disciplines1');
+    // let resp = await axiosInstance.get('https://653d2abef52310ee6a99f273.mockapi.io/disciplines');
     let resp = testUrl && (await axiosInstance.get(testUrl));
 
     let data = resp?.data?.[0];
@@ -91,10 +91,6 @@ function NewTest({ testUrl }) {
     setAnswers(answers.filter(item => item.id !== id));
   };
 
-  const handleSubmit = event => {
-    event.preventDefault();
-  };
-
   const onCurrentQuestionChange = newCurrentQuestionNumber => {
     const question = finalTest.questions?.[newCurrentQuestionNumber];
     setCurrentQuestionNumber(newCurrentQuestionNumber);
@@ -117,15 +113,51 @@ function NewTest({ testUrl }) {
     await axiosInstance.post('', finalTest);
   };
 
+  const deleteQuestion = () => {
+    const newFinal = {
+      ...finalTest,
+      questions: finalTest.questions.filter(({ id }) => id !== finalTest.questions[currentQuestionNumber].id),
+      answers: finalTest.answers.filter(
+        ({ questionId }) => questionId !== finalTest.questions[currentQuestionNumber].id
+      )
+    };
+
+    setFinalTest(newFinal);
+
+    //Идем вправо если удаляем
+
+    if (newFinal.questions.length === 0) {
+      setQuestion('');
+      setAnswers([]);
+      setCurrentQuestionNumber(0);
+
+      return;
+    }
+
+    let newCurrentNumber = currentQuestionNumber;
+
+    if (currentQuestionNumber >= newFinal.questions.length) {
+      newCurrentNumber = currentQuestionNumber - 1;
+    }
+
+    setCurrentQuestionNumber(newCurrentNumber);
+    setQuestion(newFinal.questions[newCurrentNumber].questionText);
+    setAnswers(
+      newFinal.answers.filter(({ questionId }) => questionId === newFinal.questions[newCurrentNumber].id)
+    );
+  };
+
   const isCorrectAnswerSelected = Boolean(answers.find(({ correct, answer }) => correct && answer));
   const canCreateAnswer = Boolean(testName && question && isCorrectAnswerSelected);
 
   const isEditMode = finalTest.questions && currentQuestionNumber !== finalTest.questions.length;
+  const canDeleteQuestion =
+    Boolean(finalTest.questions?.length) && currentQuestionNumber !== finalTest.questions?.length;
 
   return (
     <div className={styles.newTest__wrap}>
       <div className={styles.newTest}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={e => e.preventDefault()}>
           <input
             type="text"
             name="title"
@@ -142,13 +174,31 @@ function NewTest({ testUrl }) {
           />
 
           <div className={styles.que__wrapper}>
-            <input
-              value={question}
-              placeholder="Введите вопрос"
-              type="text"
-              className={styles.question__title}
-              onChange={handleQuestionChange}
-            ></input>
+            <div style={{ display: 'flex', gap: 20, alignItems: 'center', marginBottom: 20 }}>
+              <input
+                value={question}
+                placeholder="Введите вопрос"
+                type="text"
+                className={styles.question__title}
+                onChange={handleQuestionChange}
+                style={{ margin: 0 }}
+              />
+              <button
+                style={{
+                  backgroundColor: '#ef5350',
+                  height: 36,
+                  width: 36,
+                  display: 'inline-flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+                disabled={!canDeleteQuestion}
+                onClick={deleteQuestion}
+              >
+                <img src={img} alt="" style={{ height: 25, width: 25 }} />
+              </button>
+            </div>
+
             <div className={styles.checkbox__wrapper}>
               {answers.map(que => (
                 <label key={que.id}>

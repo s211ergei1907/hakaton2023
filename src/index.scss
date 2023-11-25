@@ -21,7 +21,7 @@ button {
   }
 
   &:disabled {
-    background-color: #bdbdbd;
+    background-color: #bdbdbd !important;
   }
 
   /* Отключаем стандартные стили для кнопки */
