@@ -4,7 +4,7 @@ import { Card } from "../../components/Card/Card";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "../../axios";
 
-export const Disciplne = () => {
+export const Discipline = () => {
   const [discipline, setDiscipline] = useState([{}]);
 
   const navigate = useNavigate();
@@ -13,7 +13,14 @@ export const Disciplne = () => {
     const { data } = await axiosInstance.get("disciplines");
     setDiscipline(data);
   };
-
+  const disciplineDelete = async (id) => {
+    try {
+      await axiosInstance.delete(`disciplines/${id}`);
+      await fetchDiscipline();
+    } catch (error) {
+      console.log("дисциплину не получилось удалить", error);
+    }
+  };
   useEffect(() => {
     fetchDiscipline();
   }, []);
@@ -37,6 +44,7 @@ export const Disciplne = () => {
               id={id}
               discipline={discipline}
               setDiscipline={setDiscipline}
+              deleteDiscipline={disciplineDelete}
             />
           ))}
         </div>

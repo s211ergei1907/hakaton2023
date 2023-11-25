@@ -7,22 +7,16 @@ import { Tests } from "../../pages/Test/Tests";
 import redact from "../../assets/img/redact.png";
 import { Update } from "../Update/Update";
 
-export const Card = ({ name, id, discipline, setDiscipline }) => {
+export const Card = ({
+  deleteDiscipline,
+  name,
+  id,
+  discipline,
+  setDiscipline,
+}) => {
   const navigate = useNavigate();
   const title_name = "disciplines";
-  const disciplineDelete = (id) => {
-    try {
-      axiosInstance
-        .delete(`disciplines/${id}`)
-        .then(
-          setDiscipline((prev) =>
-            prev.filter((item) => Number(item.id) !== Number(discipline.id)),
-          ),
-        );
-    } catch (error) {
-      console.log("дисциплину не получилось удалить", error);
-    }
-  };
+
   return (
     <div className={styles.card_wrap}>
       <div
@@ -44,7 +38,7 @@ export const Card = ({ name, id, discipline, setDiscipline }) => {
         <div
           onClick={(event) => {
             event.stopPropagation();
-            disciplineDelete(id);
+            deleteDiscipline(id);
           }}
           className={styles.closeModal}
         ></div>
