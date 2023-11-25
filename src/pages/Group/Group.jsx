@@ -15,16 +15,11 @@ export const Group = () => {
     const { data } = await axiosInstance.get("/groups");
     setGroups(data);
   };
-
-  const groupDelete = (id) => {
+  //поправить
+  const groupDelete = async (id) => {
     try {
-      axiosInstance
-        .delete(`groups/${id}`)
-        .then(
-          setGroups((prev) =>
-            prev.filter((item) => Number(item.id) !== Number(groups.id)),
-          ),
-        );
+      await axiosInstance.delete(`groups/${id}`);
+      await fetchGroup();
     } catch (error) {
       console.log("дисциплину не получилось удалить", error);
     }
@@ -32,7 +27,7 @@ export const Group = () => {
 
   useEffect(() => {
     fetchGroup();
-  }, [groups]);
+  }, []);
 
   return (
     <div className={styles.tests__wrap}>
