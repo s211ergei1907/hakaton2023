@@ -14,14 +14,22 @@ function NewDiscipline() {
   const handleInput = event => {
     setDiscipline({ [event.target.name]: event.target.value });
   };
+
+  //TODO disabled на кнопку отправить
+
   //TODO 1) взять каждый selectedGroup и положить в arraySelectedGroups
   //TODO 2) Замапить массив arraySelectedGroups и отобразить на странице
   //TODO 3) Каждому элементу добавить значок удаление и на значок удаления делать фильтр(если выбран - удалить)
+
   const handleGroupChange = event => {
-    setSelectedGroup(event.target.value);
+    if (event.target.value) {
+      setSelectedGroup(event.target.value);
+    }
   };
+
   const fetchGroup = async () => {
     const { data } = await axiosInstance.get('/groups');
+
     setGroups(data);
     console.log(groups);
   };
@@ -31,21 +39,24 @@ function NewDiscipline() {
   }, []);
 
   useEffect(() => {
-    if (arraySelectedGroups.includes(selectedGroup)) {
-      console.log('Элемент уже существует добавить его нельзя');
-    } else {
-      //Надо не пушить underfined сюда
-      arraySelectedGroups.push(selectedGroup);
-      console.log(arraySelectedGroups);
+    if (!selectedGroup || arraySelectedGroups.includes(selectedGroup)) {
+      return;
     }
+
+    setArraySelectedGroups(prevState => [...prevState, selectedGroup]);
   }, [selectedGroup]);
 
-  const handleSubmit = event => {
-    event.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault();
+
+    const body = {
+      discipline,
+      groups: arraySelectedGroups.map(id => ({ id }))
+    };
 
     axiosInstance
-      .post('disciplines', { ...discipline })
-      .then(response => navigate('/discipline'))
+      .post('disciplines', body)
+      .then(() => navigate('/discipline'))
       .catch(err => console.log(err));
   };
 
@@ -59,7 +70,7 @@ function NewDiscipline() {
             onChange={handleInput}
             name="name"
           />
-          {/*<input type="text" onChange={handleInput} name="title" />*/}
+
           <button>Добавить дисциплину</button>
         </form>
       </div>
@@ -80,11 +91,15 @@ function NewDiscipline() {
           }}
           name="group"
           value={selectedGroup}
+          defaultValue={'default'}
           onChange={handleGroupChange}
         >
-          {groups.map(city => (
-            <option key={city.id} value={city.id}>
-              {city.name}
+          <option disabled value="default">
+            Выберите группу
+          </option>
+          {groups.map(({ name, id }) => (
+            <option key={id} value={id}>
+              {name}
             </option>
           ))}
         </select>
@@ -93,10 +108,15 @@ function NewDiscipline() {
       <div className={styles.show_group}>
         {groups
           .filter(({ id }) => arraySelectedGroups.includes(id))
-          .map(({ name }) => (
+          .map(({ name, id }) => (
             <div key={name} style={{ display: 'flex' }}>
               <h1> {name}</h1>
-              <div style={{ backgroundColor: 'red', maxWidth: 26 }}>
+              <div
+                style={{ backgroundColor: '#ef5350', maxWidth: 26 }}
+                onClick={() =>
+                  setArraySelectedGroups(prev => [...prev].filter(currentId => currentId !== id))
+                }
+              >
                 <img src={img} alt="" style={{ height: 25, width: 25 }} />
               </div>
             </div>
