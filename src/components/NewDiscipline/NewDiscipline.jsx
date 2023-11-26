@@ -18,24 +18,33 @@ function NewDiscipline() {
   //TODO 2) Замапить массив arraySelectedGroups и отобразить на странице
   //TODO 3) Каждому элементу добавить значок удаление и на значок удаления делать фильтр(если выбран - удалить)
   const handleGroupChange = event => {
-    setSelectedGroup(event.target.value);
+    if (selectedGroup) {
+      setSelectedGroup(event.target.value);
+      console.log('event.target.value', event.target.value);
+    }
   };
   const fetchGroup = async () => {
     const { data } = await axiosInstance.get('/groups');
     setGroups(data);
     console.log(groups);
   };
+  useEffect(() => {
+    console.log('groups', groups);
+    console.log('arraySelectedGroups', arraySelectedGroups);
+  }, [groups, arraySelectedGroups]);
 
   useEffect(() => {
     fetchGroup();
   }, []);
 
   useEffect(() => {
+    if (!selectedGroup) {
+      return;
+    }
     if (arraySelectedGroups.includes(selectedGroup)) {
       console.log('Элемент уже существует добавить его нельзя');
     } else {
-      //Надо не пушить underfined сюда
-      arraySelectedGroups.push(selectedGroup);
+      setArraySelectedGroups(prevState => [...prevState, selectedGroup]);
       console.log(arraySelectedGroups);
     }
   }, [selectedGroup]);
@@ -82,9 +91,9 @@ function NewDiscipline() {
           value={selectedGroup}
           onChange={handleGroupChange}
         >
-          {groups.map(city => (
-            <option key={city.id} value={city.id}>
-              {city.name}
+          {groups.map(({ name, id }) => (
+            <option key={id} value={id}>
+              {name}
             </option>
           ))}
         </select>
