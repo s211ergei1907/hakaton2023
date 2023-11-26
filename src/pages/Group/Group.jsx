@@ -1,27 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { findAllByDisplayValue } from "@testing-library/react";
-import styles from "./Group.module.scss";
-import { axiosInstance } from "../../axios";
-import { useNavigate } from "react-router-dom";
-import redact from "../../assets/img/redact.png";
+import React, { useEffect, useState } from 'react';
+import { findAllByDisplayValue } from '@testing-library/react';
+import styles from './Group.module.scss';
+import { axiosInstance } from '../../axios';
+import { useNavigate } from 'react-router-dom';
+import redact from '../../assets/img/redact.png';
 export const Group = () => {
   const [groups, setGroups] = useState([]);
-  const [stateGroup, setStateGroup] = useState({ name: "" });
+  const [stateGroup, setStateGroup] = useState({ name: '' });
   const navigate = useNavigate();
 
-  const title_name = "groups";
+  const title_name = 'groups';
 
   const fetchGroup = async () => {
-    const { data } = await axiosInstance.get("/groups");
+    const { data } = await axiosInstance.get('/groups');
     setGroups(data);
+    console.log(groups);
   };
-  //поправить
-  const groupDelete = async (id) => {
+
+  const groupDelete = async id => {
     try {
       await axiosInstance.delete(`groups/${id}`);
       await fetchGroup();
     } catch (error) {
-      console.log("дисциплину не получилось удалить", error);
+      console.log('дисциплину не получилось удалить', error);
     }
   };
 
@@ -34,10 +35,10 @@ export const Group = () => {
       <div className={styles.tests}>
         <button
           onClick={() => {
-            navigate("/new_group");
+            navigate('/new_group');
           }}
           type="submit"
-          style={{ marginBottom: "30px" }}
+          style={{ marginBottom: '30px' }}
         >
           Создать новую группу
         </button>
@@ -49,10 +50,10 @@ export const Group = () => {
                 navigate(`/groups/${num.name}`);
               }}
               className={styles.card}
-              style={{ marginBottom: "10px" }}
+              style={{ marginBottom: '10px' }}
             >
               <div
-                onClick={(event) => {
+                onClick={event => {
                   event.stopPropagation();
                   navigate(`/update/${title_name}/${num.name}/${num.id}`);
                 }}
@@ -61,7 +62,7 @@ export const Group = () => {
                 <img src={redact} />
               </div>
               <div
-                onClick={(event) => {
+                onClick={event => {
                   event.stopPropagation();
                   groupDelete(num.id);
                 }}

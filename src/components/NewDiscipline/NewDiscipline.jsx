@@ -1,25 +1,52 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import styles from "./NewDiscipline.module.scss";
-import { axiosInstance } from "../../axios";
-import { Link } from "react-router-dom";
-import { logDOM } from "@testing-library/react";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styles from './NewDiscipline.module.scss';
+import { axiosInstance } from '../../axios';
+import img from '../../assets/icons/delete.svg';
 
 function NewDiscipline() {
-  const [discipline, setDiscipline] = useState({ name: "" });
+  const [discipline, setDiscipline] = useState({ name: '' });
+  const [groups, setGroups] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState();
+  const [arraySelectedGroups, setArraySelectedGroups] = useState([]);
 
   const navigate = useNavigate();
-  const handleInput = (event) => {
+  const handleInput = event => {
     setDiscipline({ [event.target.name]: event.target.value });
   };
+  //TODO 1) взять каждый selectedGroup и положить в arraySelectedGroups
+  //TODO 2) Замапить массив arraySelectedGroups и отобразить на странице
+  //TODO 3) Каждому элементу добавить значок удаление и на значок удаления делать фильтр(если выбран - удалить)
+  const handleGroupChange = event => {
+    setSelectedGroup(event.target.value);
+  };
+  const fetchGroup = async () => {
+    const { data } = await axiosInstance.get('/groups');
+    setGroups(data);
+    console.log(groups);
+  };
 
-  const handleSubmit = (event) => {
+  useEffect(() => {
+    fetchGroup();
+  }, []);
+
+  useEffect(() => {
+    if (arraySelectedGroups.includes(selectedGroup)) {
+      console.log('Элемент уже существует добавить его нельзя');
+    } else {
+      //Надо не пушить underfined сюда
+      arraySelectedGroups.push(selectedGroup);
+      console.log(arraySelectedGroups);
+    }
+  }, [selectedGroup]);
+
+  const handleSubmit = event => {
     event.preventDefault();
 
     axiosInstance
-      .post("disciplines", { ...discipline })
-      .then((response) => navigate("/discipline"))
-      .catch((err) => console.log(err));
+      .post('disciplines', { ...discipline })
+      .then(response => navigate('/discipline'))
+      .catch(err => console.log(err));
   };
 
   return (
@@ -28,7 +55,7 @@ function NewDiscipline() {
         <form onSubmit={handleSubmit}>
           <input
             type="discipline"
-            placeholder={"Добавьте новую дисциплину"}
+            placeholder={'Добавьте новую дисциплину'}
             onChange={handleInput}
             name="name"
           />
@@ -36,8 +63,49 @@ function NewDiscipline() {
           <button>Добавить дисциплину</button>
         </form>
       </div>
+      <div className={styles.add_group}>
+        <div className={styles.text_info}>
+          <h3>Выберите группы, которые должны добавляться к дисциплине</h3>
+          <p>Для того чтобы выбрать группу, найдите её в этом списке, а затем кликните на нее.</p>
+          <p>Добавленные группу вы увидите внизу</p>
+        </div>
+        <select
+          style={{
+            maxWidth: '450px',
+            height: '30px',
+            display: 'grid',
+            gridGap: '10px',
+            paddingRight: 100,
+            fontSize: '16px'
+          }}
+          name="group"
+          value={selectedGroup}
+          onChange={handleGroupChange}
+        >
+          {groups.map(city => (
+            <option key={city.id} value={city.id}>
+              {city.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className={styles.show_group}>
+        {groups
+          .filter(({ id }) => arraySelectedGroups.includes(id))
+          .map(({ name }) => (
+            <div key={name} style={{ display: 'flex' }}>
+              <h1> {name}</h1>
+              <div style={{ backgroundColor: 'red', maxWidth: 26 }}>
+                <img src={img} alt="" style={{ height: 25, width: 25 }} />
+              </div>
+            </div>
+          ))}
+      </div>
     </div>
   );
 }
 
 export default NewDiscipline;
+
+//

@@ -1,18 +1,35 @@
 .newDiscipline__wrap {
   max-width: 1480px;
   margin: 50px auto;
-  padding-left: 130px;
+  padding: 0 130px;
+  display: grid;
+  grid-gap: 40px;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+
+  .add_group{
+    .text_info{
+      max-width: 500px;
+      display: grid;
+      grid-gap: 10px;
+      margin-bottom: 7px;
+    }
+  }
 }
 .newDiscipline{
+
  form{
    display: flex;
    flex-direction: column;
    max-width: 800px;
 
    input{
+     min-width: 500px;
      margin-bottom: 20px;
      height: auto;
      display: inline-block;
+
    }
  }
 }

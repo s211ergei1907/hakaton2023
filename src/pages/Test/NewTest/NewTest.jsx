@@ -110,7 +110,9 @@ function NewTest({ testUrl }) {
 
   const onSaveTest = async () => {
     //TODO вставить URL
-    await axiosInstance.post('', finalTest);
+    await axiosInstance.post(`tests/${disciplineName}`, finalTest);
+
+    console.log(finalTest.stringify);
   };
 
   const deleteQuestion = () => {
