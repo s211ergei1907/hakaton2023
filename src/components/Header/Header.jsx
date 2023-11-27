@@ -1,10 +1,10 @@
-import React from "react";
-import styles from "./Header.module.scss";
-import { Outlet, Link } from "react-router-dom";
-import tg from "../../assets/img/tg.svg";
-import vk from "../../assets/img/vk.svg";
-import logo from "../../assets/img/logoSDK.svg";
-import SignIn from "../../pages/SignIn/SignIn";
+import React from 'react';
+import styles from './Header.module.scss';
+import { Outlet, Link } from 'react-router-dom';
+import tg from '../../assets/img/tg.svg';
+import vk from '../../assets/img/vk.svg';
+import logo from '../../assets/img/logoSDK.svg';
+import SignIn from '../../pages/SignIn/SignIn';
 
 export const Header = () => {
   return (
@@ -19,14 +19,18 @@ export const Header = () => {
             <Link to="/disciplines">
               <li>Дисциплины</li>
             </Link>
-            <Link to="/test">
+            <Link to="/results/disciplines">
               <li>Результаты</li>
             </Link>
             <Link to="/groups">
               <li>Группы</li>
             </Link>
-            <li>Создание преподавателей</li>
-            <li>Создание админа</li>
+            <Link to="/create_teacher">
+              <li>Создание преподавателей</li>
+            </Link>
+            <Link to="/create_admin">
+              <li>Создание админа</li>
+            </Link>
           </ul>
           <div className={styles.header__link}>
             <Link to="/auth">

@@ -4,15 +4,17 @@ import { useNavigate } from 'react-router-dom';
 
 const Registration = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
+  const [fullname, setFullName] = useState('');
+  const [description, setDescription] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
 
   const handleRegistration = async () => {
-    if (username !== '' && password !== '' && email !== '') {
+    if (fullname !== '' && password !== '' && email !== '') {
       try {
         const response = await axiosInstance.post('/register', {
-          username,
+          fullname,
+          description,
           password,
           email
         });
@@ -27,17 +29,27 @@ const Registration = () => {
   };
 
   return (
-    <div>
-      <h2>Регистрация</h2>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        margin: '0 auto',
+        alignItems: 'center'
+      }}
+    >
+      <div style={{ margin: '30px 0' }}>
+        <h1>Регистрация</h1>
+      </div>
       <br />
       <form>
         <label>
           <input
             style={{ width: '500px' }}
-            placeholder="Имя пользователя:"
+            placeholder="ФИО"
             type="text"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
+            value={fullname}
+            onChange={e => setFullName(e.target.value)}
           />
         </label>
         <br />
@@ -60,6 +72,20 @@ const Registration = () => {
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
+          />
+        </label>
+        <label>
+          <br />
+          <br />
+          <br />
+          <textarea
+            style={{ width: 517 }}
+            id="textAreaInput"
+            placeholder={'Напишите о себе'}
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            rows={5} // Задайте желаемое количество строк
+            cols={50} // Задайте желаемое количество столбцов
           />
         </label>
         <br />
