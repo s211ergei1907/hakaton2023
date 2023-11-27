@@ -17,10 +17,6 @@ function NewDiscipline() {
 
   //TODO disabled на кнопку отправить
 
-  //TODO 1) взять каждый selectedGroup и положить в arraySelectedGroups
-  //TODO 2) Замапить массив arraySelectedGroups и отобразить на странице
-  //TODO 3) Каждому элементу добавить значок удаление и на значок удаления делать фильтр(если выбран - удалить)
-
   const handleGroupChange = event => {
     if (event.target.value) {
       setSelectedGroup(event.target.value);
@@ -30,8 +26,8 @@ function NewDiscipline() {
   const fetchGroup = async () => {
     const { data } = await axiosInstance.get('/groups');
 
-    setGroups(data);
-    console.log(groups);
+    //Преобразование id в строку
+    setGroups(data.map(item => ({ ...item, id: String(item.id) })));
   };
 
   useEffect(() => {
@@ -56,7 +52,7 @@ function NewDiscipline() {
 
     axiosInstance
       .post('disciplines', body)
-      .then(() => navigate('/discipline'))
+      .then(() => navigate('/disciplines'))
       .catch(err => console.log(err));
   };
 
@@ -71,7 +67,7 @@ function NewDiscipline() {
             name="name"
           />
 
-          <button>Добавить дисциплину</button>
+          <button disabled={!(discipline.name.trim() && selectedGroup)}>Добавить дисциплину</button>
         </form>
       </div>
       <div className={styles.add_group}>

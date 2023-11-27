@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../../axios';
 
-const SignIn = () => {
-  const [username, setUsername] = useState('');
+const CreateAdmin = () => {
+  const [email, setLogin] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const [admin, setAdmin] = useState(['В разработке!']);
+
   const handleLogin = async () => {
     try {
-      const response = await axiosInstance.post('/login', {
-        username,
+      const response = await axiosInstance.post('/superadmin/createadmin', {
+        email,
         password
       });
-      navigate('/');
+
+      console.log('Админ добавлен', response.data);
     } catch (error) {
-      console.error('Ошибка авторизации', error.response.data);
+      console.error('Админ не добавлен', error.response.data);
     }
   };
 
@@ -29,7 +30,7 @@ const SignIn = () => {
       }}
     >
       <div style={{ margin: '30px 0' }}>
-        <h1>Авторизация</h1>
+        <h1>Создать админа</h1>
       </div>
       <div>
         <form>
@@ -38,9 +39,9 @@ const SignIn = () => {
               style={{ width: '500px' }}
               placeholder="Введите email"
               type="text"
-              value={username}
-              onChange={e => setUsername(e.target.value)}
-              autoComplete="current-username"
+              value={email}
+              onChange={e => setLogin(e.target.value)}
+              autoComplete="current-login"
             />
           </label>
           <br />
@@ -58,16 +59,21 @@ const SignIn = () => {
           <br />
           <br />
           <button type="button" onClick={handleLogin}>
-            Войти
+            Создать
           </button>
           <br /> <br />
-          <Link to="/registration">
-            <h4 style={{ color: 'blue' }}>У меня нет аккаунта. Зарегистрироваться</h4>
-          </Link>
         </form>
       </div>
+
+      <h1 style={{ marginBottom: 10 }}>Существующие админы на сайте: </h1>
+
+      {admin.map(item => (
+        <h1 style={{ color: 'red' }} key={item}>
+          {item}
+        </h1>
+      ))}
     </div>
   );
 };
 
-export default SignIn;
+export default CreateAdmin;

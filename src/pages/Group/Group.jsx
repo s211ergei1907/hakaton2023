@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import redact from '../../assets/img/redact.png';
 export const Group = () => {
   const [groups, setGroups] = useState([]);
-  const [stateGroup, setStateGroup] = useState({ name: '' });
   const navigate = useNavigate();
 
   const title_name = 'groups';

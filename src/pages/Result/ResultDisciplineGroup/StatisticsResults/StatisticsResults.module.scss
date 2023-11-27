@@ -1,0 +1,29 @@
+.userProfile {
+  font-family: 'Roboto', sans-serif;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  max-width: 1350px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-around ;
+
+}
+
+.userName {
+  font-size: 1.2em;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.testInfo {
+  display: flex;
+  justify-content: space-between;
+}
+
+.percentageCorrect {
+  font-weight: bold;
+  color: #ff5733; /* Цвет для выделения процента правильных ответов */
+}
