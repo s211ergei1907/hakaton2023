@@ -18,6 +18,14 @@ import CreateAdmin from './pages/ROLE/CreateAdmin';
 import RedactUser from './pages/ROLE/RedactUser';
 import RedactTest from './pages/Test/RedactTest/RedactTest';
 
+function Sucsesfully() {
+  return (
+    <>
+      <h1>Успешно</h1>
+    </>
+  );
+}
+
 function App() {
   return (
     <>
@@ -42,8 +50,10 @@ function App() {
               <Route path="results/:disciplineName/groups" element={<ResultDisciplineGroups />}></Route>
               <Route path="results/:disciplineName/groups/:groupName" element={<StatisticsResults />}></Route>
               //ROLE
-              <Route path="create_admin" element={<CreateAdmin />}></Route>
+              <Route path="/superadmin/createadmin" element={<CreateAdmin />}></Route>
               <Route path="create_teacher" element={<RedactUser />}></Route>
+              //
+              <Route path="sucsessfully" element={<Sucsesfully />}></Route>
             </Route>
           </Routes>
         </BrowserRouter>

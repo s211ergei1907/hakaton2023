@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from './NewTest.module.scss';
 import { axiosInstance } from '../../../axios';
 import img from '../../../assets/icons/delete.svg';
 
 function NewTest({ testUrl }) {
-  const { disciplineName } = useParams();
+  const navigate = useNavigate();
+  const { disciplineName, testId } = useParams();
 
   const [question, setQuestion] = useState('');
   const [testName, setTestName] = useState('');
@@ -16,7 +17,7 @@ function NewTest({ testUrl }) {
 
   const fetchDiscipline = async () => {
     // let resp = await axiosInstance.get('https://653d2abef52310ee6a99f273.mockapi.io/disciplines');
-    let resp = testUrl && (await axiosInstance.get(testUrl));
+    let resp = testUrl && (await axiosInstance.get(`tests/${disciplineName}/${testId}`));
 
     let data = resp?.data?.[0];
 
@@ -109,10 +110,10 @@ function NewTest({ testUrl }) {
   };
 
   const onSaveTest = async () => {
-    //TODO вставить URL
     await axiosInstance.post(`tests/${disciplineName}`, finalTest);
 
     console.log(finalTest.stringify);
+    navigate(`/tests/${disciplineName}`);
   };
 
   const deleteQuestion = () => {
