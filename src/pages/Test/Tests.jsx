@@ -3,9 +3,11 @@ import { findAllByDisplayValue, logDOM } from '@testing-library/react';
 import styles from './Tests.module.scss';
 import { axiosInstance } from '../../axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import NewTest from './NewTest/NewTest';
 
 export const Tests = () => {
   const [tests, setTests] = useState([]);
+  const [oneTests, setOneTests] = useState([]);
   const { disciplineName } = useParams();
   const navigate = useNavigate();
 
@@ -15,6 +17,18 @@ export const Tests = () => {
     const { data } = await axiosInstance.get(`tests/${disciplineName}`);
     setTests(data);
   };
+  const onClickTest = async (testName, testId) => {
+    const { data } = await axiosInstance.get(`tests/${disciplineName}/${testId}`);
+    setOneTests(data);
+    console.log(`tests/${disciplineName}/testId`);
+    console.log('oneTest', data);
+    navigate(`tests/${disciplineName}/${testId}`);
+    // <NewTest testUrl={`tests/${disciplineName}/Math%20Test%201`} />;
+  };
+
+  useEffect(() => {
+    // fetchOneTest();
+  }, []);
 
   useEffect(() => {
     fetchTests();
@@ -32,7 +46,7 @@ export const Tests = () => {
       <div className={styles.tests}>
         <div className={styles.card_wrap}>
           {tests.map(({ testName, id }, index) => (
-            <div key={index}>
+            <div onClick={() => onClickTest(testName, id)} key={index}>
               <div className={styles.card}>
                 <p>{testName}</p>
               </div>
