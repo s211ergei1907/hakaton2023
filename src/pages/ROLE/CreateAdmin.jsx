@@ -4,7 +4,7 @@ import { axiosInstance } from '../../axios';
 const CreateAdmin = () => {
   const [email, setLogin] = useState('');
   const [password, setPassword] = useState('');
-  const [admin, setAdmin] = useState(['В разработке!']);
+  const [admin, setAdmin] = useState(['']);
 
   const handleLogin = async () => {
     try {

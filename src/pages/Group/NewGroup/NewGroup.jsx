@@ -84,7 +84,7 @@ function NewGroup() {
           onChange={handleGroupChange}
         >
           <option disabled value="default">
-            Выберите группу
+            Выберите дисциплину
           </option>
           {disciplines.map(({ name, id }) => (
             <option key={id} value={id}>
