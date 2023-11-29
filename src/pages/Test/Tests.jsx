@@ -18,8 +18,8 @@ export const Tests = () => {
     setTests(data);
   };
   const onClickTest = async (testName, testId) => {
-    // const { data } = await axiosInstance.get(`tests/${disciplineName}/${testId}`);
-    // setOneTests(data);
+    const { data } = await axiosInstance.get(`tests/${disciplineName}/${testId}`);
+    setOneTests(data);
 
     // console.log('ONE_TEST', data);
 

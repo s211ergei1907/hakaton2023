@@ -122,8 +122,8 @@ function NewTest() {
 
   const onSaveTest = async () => {
     await axiosInstance.post(`tests/${disciplineName}`, finalTest);
-
-    navigate(`/tests/${disciplineName}`);
+    console.log(finalTest, 'finalTest');
+    // navigate(`/tests/${disciplineName}`);
   };
 
   const deleteQuestion = () => {
