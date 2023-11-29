@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { axiosInstance } from '../../axios';
-
+import styles from './CreateAdmin.module.scss';
 const CreateAdmin = () => {
   const [email, setLogin] = useState('');
   const [password, setPassword] = useState('');
-  const [admin, setAdmin] = useState(['']);
+  const [admin, setAdmin] = useState([]);
 
   const handleLogin = async () => {
     try {
@@ -17,6 +17,24 @@ const CreateAdmin = () => {
     } catch (error) {
       console.error('Админ не добавлен', error.response.data);
     }
+  };
+
+  const fetchAllAdmin = async () => {
+    try {
+      const { data } = await axiosInstance.get('/admin');
+      setAdmin(data);
+      console.log(data);
+    } catch (error) {
+      console.error('Error fetching result disciplines:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllAdmin();
+  }, []);
+
+  const handleDeleteUser = id => {
+    setAdmin(admin.filter(user => user.id !== id));
   };
 
   return (
@@ -67,11 +85,28 @@ const CreateAdmin = () => {
 
       <h1 style={{ marginBottom: 10 }}>Существующие админы на сайте: </h1>
 
-      {admin.map(item => (
-        <h1 style={{ color: 'red' }} key={item}>
-          {item}
-        </h1>
-      ))}
+      <table className={styles.user_table}>
+        {admin.length > 0 && (
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Роль</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+        )}
+        <tbody>
+          {admin.map((user, index) => (
+            <tr key={index}>
+              <td>{user.email}</td>
+              <td>{user.role}</td>
+              <td>
+                <button onClick={() => handleDeleteUser(user.id)}>Удалить</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
