@@ -8,18 +8,15 @@ function NewTest() {
   const navigate = useNavigate();
   const { disciplineName, testData } = useParams();
 
-  const propTestName = testData.split('-')[0];
-  const testId = testData.split('-')[1];
+  const separateIndex = testData?.split('').findLastIndex(el => el === '-');
+
+  const propTestName = testData?.slice(0, separateIndex);
+  const testId = testData?.slice(separateIndex + 1);
 
   const testUrl = testData && `tests/${disciplineName}/${testId}`;
 
-  console.log('testId', testId);
-  console.log('propTestName', propTestName);
-
-  console.log(disciplineName, testId);
-
   const [question, setQuestion] = useState('');
-  const [testName, setTestName] = useState('');
+  const [testName, setTestName] = useState(propTestName ?? '');
   const [answers, setAnswers] = useState([]);
   const [currentQuestionNumber, setCurrentQuestionNumber] = useState(0);
 
@@ -27,17 +24,7 @@ function NewTest() {
 
   const fetchDiscipline = async () => {
     // let resp = await axiosInstance.get('https://653d2abef52310ee6a99f273.mockapi.io/disciplines');
-    let resp = testUrl && (await axiosInstance.get(`tests/${disciplineName}/${testId}`));
-
-    console.log('disciplineName из params', disciplineName);
-    console.log('testId из params', testId);
-    console.log('resp', resp.data);
-    console.log('testName', testName);
-
-    //МОЁ
-    const { oneTest } = await axiosInstance.get(`tests/${disciplineName}/${testId}`);
-    console.log(oneTest);
-    console.log('Один тест должен сюда упасть', oneTest);
+    let resp = testUrl && (await axiosInstance.get(testUrl));
 
     let data = resp?.data;
 
@@ -136,7 +123,6 @@ function NewTest() {
   const onSaveTest = async () => {
     await axiosInstance.post(`tests/${disciplineName}`, finalTest);
 
-    console.log(finalTest.stringify);
     navigate(`/tests/${disciplineName}`);
   };
 

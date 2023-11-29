@@ -16,7 +16,6 @@ import ResultDisciplineGroups from './pages/Result/ResultDisciplineGroup/ResultD
 import StatisticsResults from './pages/Result/ResultDisciplineGroup/StatisticsResults/StatisticsResults';
 import CreateAdmin from './pages/ROLE/CreateAdmin';
 import RedactUser from './pages/ROLE/RedactUser';
-import RedactTest from './pages/Test/RedactTest/RedactTest';
 
 function Sucsesfully() {
   return (
@@ -43,7 +42,6 @@ function App() {
               <Route path="groups" element={<Group />} />
               <Route path="groups/:name_group" element={<StudentList />} />
               <Route path="update/:title_name/:name/:id" element={<Update />}></Route>
-              //
               <Route path="new_test/:disciplineName" element={<NewTest />}></Route>
               <Route path="test_redact/:disciplineName/:testData" element={<NewTest />}></Route>
               //Result
