@@ -20,21 +20,23 @@ const CreateAdmin = () => {
   };
 
   const fetchAllAdmin = async () => {
-    try {
-      const { data } = await axiosInstance.get('/admin');
-      setAdmin(data);
-      console.log(data);
-    } catch (error) {
-      console.error('Error fetching result disciplines:', error);
-    }
+    const { data } = await axiosInstance.get('/admin');
+    setAdmin(data);
   };
 
   useEffect(() => {
     fetchAllAdmin();
   }, []);
 
-  const handleDeleteUser = id => {
-    setAdmin(admin.filter(user => user.id !== id));
+  const handleDeleteUser = async id => {
+    try {
+      await axiosInstance.delete(`admin/${id}`);
+      await fetchAllAdmin();
+    } catch (error) {
+      console.log('не получилось удалить', error);
+    }
+    // setAdmin(admin.filter(user => user.id !== id));
+    // fetchAllAdmin();
   };
 
   return (

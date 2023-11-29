@@ -18,11 +18,12 @@ export const Tests = () => {
     setTests(data);
   };
   const onClickTest = async (testName, testId) => {
-    const { data } = await axiosInstance.get(`tests/${disciplineName}/${testId}`);
-    setOneTests(data);
-    console.log(`tests/${disciplineName}/testId`);
-    console.log('oneTest', data);
-    navigate(`tests/${disciplineName}/${testId}`);
+    // const { data } = await axiosInstance.get(`tests/${disciplineName}/${testId}`);
+    // setOneTests(data);
+
+    // console.log('ONE_TEST', data);
+
+    navigate(`/test_redact/${disciplineName}/${testName}-${testId}`);
     // <NewTest testUrl={`tests/${disciplineName}/Math%20Test%201`} />;
   };
 

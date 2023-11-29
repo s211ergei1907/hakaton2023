@@ -4,9 +4,19 @@ import styles from './NewTest.module.scss';
 import { axiosInstance } from '../../../axios';
 import img from '../../../assets/icons/delete.svg';
 
-function NewTest({ testUrl }) {
+function NewTest() {
   const navigate = useNavigate();
-  const { disciplineName, testId } = useParams();
+  const { disciplineName, testData } = useParams();
+
+  const propTestName = testData.split('-')[0];
+  const testId = testData.split('-')[1];
+
+  const testUrl = testData && `tests/${disciplineName}/${testId}`;
+
+  console.log('testId', testId);
+  console.log('propTestName', propTestName);
+
+  console.log(disciplineName, testId);
 
   const [question, setQuestion] = useState('');
   const [testName, setTestName] = useState('');
@@ -19,12 +29,22 @@ function NewTest({ testUrl }) {
     // let resp = await axiosInstance.get('https://653d2abef52310ee6a99f273.mockapi.io/disciplines');
     let resp = testUrl && (await axiosInstance.get(`tests/${disciplineName}/${testId}`));
 
-    let data = resp?.data?.[0];
+    console.log('disciplineName из params', disciplineName);
+    console.log('testId из params', testId);
+    console.log('resp', resp.data);
+    console.log('testName', testName);
+
+    //МОЁ
+    const { oneTest } = await axiosInstance.get(`tests/${disciplineName}/${testId}`);
+    console.log(oneTest);
+    console.log('Один тест должен сюда упасть', oneTest);
+
+    let data = resp?.data;
 
     if (data) {
       setFinalTest(data);
-      setTestName(data.test.testName);
-      setQuestion(data.questions[0].questionText);
+      setTestName(propTestName);
+      setQuestion(data.questions[0]?.questionText ?? '');
       setAnswers(data.answers.filter(({ questionId }) => questionId === data.questions[0]?.id));
     } else {
       setFinalTest(prev => ({ ...prev, test: { ...prev.test, id: String(Math.random()).slice(2) } }));
@@ -35,7 +55,6 @@ function NewTest({ testUrl }) {
     fetchDiscipline();
   }, []);
 
-  //Создать целый вопрос с ответами, записать это в JSON, после чего очистить поля для возможности создания ещё вопроса
   const onClickCreateQuestion = () => {
     const id = isEditMode ? answers[0].questionId : String(Math.random()).slice(2);
 
@@ -68,8 +87,13 @@ function NewTest({ testUrl }) {
     }
   };
 
-  const handleChangeCheckboxAnswers = (id, correct) => {
-    setAnswers(prevData => prevData.map(item => (item.id === id ? { ...item, correct } : item)));
+  const handleChangeRadioAnswer = id => {
+    setAnswers(prevData =>
+      prevData.map(item => ({
+        ...item,
+        correct: item.id === id
+      }))
+    );
   };
 
   const handleChangeInputAnswers = (id, answer) => {
@@ -206,12 +230,11 @@ function NewTest({ testUrl }) {
               {answers.map(que => (
                 <label key={que.id}>
                   <input
-                    value="option2"
-                    type="checkbox"
-                    name="true"
+                    type="radio"
+                    name="correctAnswer"
                     className={styles.real_check}
                     checked={que.correct}
-                    onChange={e => handleChangeCheckboxAnswers(que.id, e.target.checked)}
+                    onChange={() => handleChangeRadioAnswer(que.id)}
                   />
                   <span className={styles.fake_check}></span>
                   <input

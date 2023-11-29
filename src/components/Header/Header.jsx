@@ -14,7 +14,7 @@ export const Header = () => {
     axiosInstance
       .post('/log_out', {})
       .then(response => {
-        console.log(response.data);
+        navigate('./auth');
       })
       .catch(error => {
         console.error('There was a problem:', error);

@@ -43,8 +43,9 @@ function App() {
               <Route path="groups" element={<Group />} />
               <Route path="groups/:name_group" element={<StudentList />} />
               <Route path="update/:title_name/:name/:id" element={<Update />}></Route>
+              //
               <Route path="new_test/:disciplineName" element={<NewTest />}></Route>
-              {/*<Route path="tests/:disciplineName" element={<RedactTest />}></Route>*/}
+              <Route path="test_redact/:disciplineName/:testData" element={<NewTest />}></Route>
               //Result
               <Route path="results/disciplines" element={<ResultDisciplines />}></Route>
               <Route path="results/:disciplineName/groups" element={<ResultDisciplineGroups />}></Route>
