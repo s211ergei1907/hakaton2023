@@ -15,8 +15,8 @@ const Registration = () => {
         const response = await axiosInstance.post('/register', {
           fullname,
           description,
-          password,
-          email
+          email,
+          password
         });
         console.log('Успешная регистрация', response.data);
         navigate('/auth');
