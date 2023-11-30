@@ -95,7 +95,7 @@ function NewGroup() {
       </div>
 
       <div className={styles.show_group}>
-        <h1>Выбранные группы</h1>
+        <h1>Выбранные дисциплины</h1>
         {disciplines
           .filter(({ id }) => arraySelectedDisciplines.includes(id))
           .map(({ name, id }) => (

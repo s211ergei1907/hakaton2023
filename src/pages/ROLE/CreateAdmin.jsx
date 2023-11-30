@@ -12,6 +12,7 @@ const CreateAdmin = () => {
         email,
         password
       });
+      fetchAllAdmin();
 
       console.log('Админ добавлен', response.data);
     } catch (error) {
@@ -37,6 +38,17 @@ const CreateAdmin = () => {
     }
     // setAdmin(admin.filter(user => user.id !== id));
     // fetchAllAdmin();
+  };
+
+  const handleCreateAdmin = id => {
+    axiosInstance
+      .post(`/admin/teacher/${id}`, {})
+      .then(response => {
+        fetchAllAdmin();
+      })
+      .catch(error => {
+        console.error('There was a problem:', error);
+      });
   };
 
   return (
@@ -85,7 +97,7 @@ const CreateAdmin = () => {
         </form>
       </div>
 
-      <h1 style={{ marginBottom: 10 }}>Существующие админы на сайте: </h1>
+      <h1 style={{ marginBottom: 10 }}>Существующие пользователи на сайте: </h1>
 
       <table className={styles.user_table}>
         {admin.length > 0 && (
@@ -104,6 +116,19 @@ const CreateAdmin = () => {
               <td>{user.role}</td>
               <td>
                 <button onClick={() => handleDeleteUser(user.id)}>Удалить</button>
+                <button
+                  onClick={() => {
+                    handleCreateAdmin(user.id);
+                  }}
+                  style={{
+                    backgroundColor: '#b388ff',
+                    marginLeft: '20px',
+                    transition: 'all ease .5s',
+                    ':hover': { color: '#fd0808' }
+                  }}
+                >
+                  Сделать преподавателем
+                </button>
               </td>
             </tr>
           ))}

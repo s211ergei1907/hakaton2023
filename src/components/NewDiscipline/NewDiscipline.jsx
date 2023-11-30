@@ -67,7 +67,7 @@ function NewDiscipline() {
             name="name"
           />
 
-          <button disabled={!(discipline.name.trim() && selectedGroup)}>Добавить дисциплину</button>
+          <button disabled={!discipline.name.trim()}>Добавить дисциплину</button>
         </form>
       </div>
       <div className={styles.add_group}>

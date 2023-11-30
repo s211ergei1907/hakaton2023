@@ -40,15 +40,15 @@ export const Header = () => {
             <Link to="/groups">
               <li>Группы</li>
             </Link>
-            <Link to="/create_teacher">
-              <li>Создание преподавателей</li>
-            </Link>
-
             {isAdmin && (
-              <Link to="/superadmin/createadmin">
-                <li>Создание админа</li>
+              <Link to="/create_teacher">
+                <li>Создание преподавателей</li>
               </Link>
             )}
+
+            <Link to="/superadmin/createadmin">
+              <li>Создание админа</li>
+            </Link>
           </ul>
           <div className={styles.header__link}>
             <Link to="/auth">
